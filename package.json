@@ -1,0 +1,48 @@
+{
+  "name": "hotline-dpi",
+  "version": "1.0.0",
+  "description": "Hotline DPI - Bypass ISP throttling and DNS blocking",
+  "author": "Hotline DPI",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "node node_modules/electron-builder/cli.js --win zip --x64"
+  },
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.hotlinedpi.app",
+    "productName": "Hotline DPI",
+    "copyright": "Hotline DPI",
+    "win": {
+      "target": [
+        { "target": "zip", "arch": ["x64"] }
+      ],
+      "requestedExecutionLevel": "requireAdministrator",
+      "icon": "assets/icon.ico",
+      "signingHashAlgorithms": null,
+      "sign": null
+    },
+    "files": [
+      "src/**/*",
+      "assets/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "bin/goodbyedpi",
+        "to": "bin/goodbyedpi",
+        "filter": ["**/*"]
+      },
+      {
+        "from": "bin/dnsproxy",
+        "to": "bin/dnsproxy",
+        "filter": ["**/*"]
+      }
+    ],
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

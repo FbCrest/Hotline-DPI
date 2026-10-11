@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hotline DPI</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<div id="app">
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="app-brand"><span class="brand-prefix">&gt;_</span> HOTLINE DPI <span class="brand-credit">by Su</span></div>
+    <div class="topbar-right">
+      <div class="win-btns">
+        <button class="win-btn" id="btn-min">─</button>
+        <button class="win-btn" id="btn-max">□</button>
+        <button class="win-btn close" id="btn-close">✕</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT -->
+  <div class="layout">
+
+    <!-- SIDEBAR — 4 mục -->
+    <nav class="sidebar">
+      <div class="nav-section">
+        <button class="nav-item active" data-page="home">Trang chủ</button>
+        <button class="nav-item"        data-page="tools">Thay đổi DNS</button>
+        <button class="nav-item"        data-page="settings">Cài đặt</button>
+        <button class="nav-item"        data-page="logs">Nhật ký</button>
+      </div>
+      <div class="nav-spacer"></div>
+    </nav>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <!-- ===== HOME PAGE ===== -->
+      <div class="page active" id="page-home">
+
+        <div class="home-top" id="home-top">
+
+          <!-- Status label -->
+          <div class="status-label" id="main-status-label">CHƯA BẢO VỆ</div>
+          <div class="status-address" id="main-status-addr">bấm để kết nối</div>
+
+          <!-- Power orb -->
+          <div class="power-wrap" id="power-wrap">
+            <div class="power-ring"></div>
+            <div class="power-ring r2"></div>
+            <button class="power-btn" id="power-btn">
+              <svg class="power-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 3v9"/>
+                <path d="M18.36 5.64a9 9 0 1 1-12.72 0"/>
+              </svg>
+            </button>
+          </div>
+
+          <div class="connect-state-text" id="connect-state-text" style="display:none"></div>
+          <div class="connect-hint" id="connect-hint" style="display:none"></div>
+
+        </div>
+
+        <!-- Info panel bên dưới nút -->
+        <div class="home-info-panel">
+
+          <!-- Latency -->
+          <div class="info-metric" id="latency-block">
+            <div class="info-metric-label">độ trễ</div>
+            <div class="info-metric-val small" id="latency-val">-- ms</div>
+          </div>
+
+          <div class="info-sep"></div>
+
+          <!-- DNS -->
+          <div class="info-metric">
+            <div class="info-metric-label">dns</div>
+            <div class="info-metric-val small" id="stat-server">—</div>
+          </div>
+
+          <div class="info-sep"></div>
+
+          <!-- DPI -->
+          <div class="info-metric">
+            <div class="info-metric-label">dpi bypass</div>
+            <div class="info-metric-val small off" id="stat-dpi">tắt</div>
+          </div>
+
+          <div class="info-sep"></div>
+
+          <!-- Queries -->
+          <div class="info-metric">
+            <div class="info-metric-label">truy vấn / phút</div>
+            <div class="info-metric-val small" id="stat-queries">0</div>
+          </div>
+
+        </div>
+
+        <!-- Dịch vụ đang bảo vệ -->
+        <div class="home-services" id="home-services">
+          <div class="home-svc-title">dịch vụ đang bảo vệ</div>
+          <div class="home-svc-list">
+            <div class="home-svc-item" id="hsvc-steam">
+              <span class="home-svc-dot" id="hdot-steam"></span>
+              <span class="home-svc-name">Steam</span>
+            </div>
+            <div class="home-svc-item" id="hsvc-discord">
+              <span class="home-svc-dot" id="hdot-discord"></span>
+              <span class="home-svc-name">Discord</span>
+            </div>
+            <div class="home-svc-item" id="hsvc-reddit">
+              <span class="home-svc-dot" id="hdot-reddit"></span>
+              <span class="home-svc-name">Reddit</span>
+            </div>
+            <div class="home-svc-item" id="hsvc-netease">
+              <span class="home-svc-dot" id="hdot-netease"></span>
+              <span class="home-svc-name">NetEase</span>
+            </div>
+          </div>
+        </div>
+      </div><!-- /page-home -->
+
+      <!-- ===== TOOLS PAGE ===== -->
+      <div class="page" id="page-tools">
+        <div class="page-body">
+
+          <!-- DNS STATUS PANEL -->
+          <div class="page-section">
+            <div class="page-section-title" style="display:flex;align-items:center;justify-content:space-between">
+              <span>dns hiện tại</span>
+              <button class="btn-sm" id="btn-refresh-dns">↻ làm mới</button>
+            </div>
+            <div id="dns-info-panel" class="dns-info-panel">
+              <div class="dns-loading">đang kiểm tra...</div>
+            </div>
+          </div>
+
+          <!-- DNS QUICK BUTTONS -->
+          <div class="page-section">
+            <div class="page-section-title">đổi dns</div>
+            <div class="dns-quick-grid">
+              <button class="dns-q-btn" data-dns="cf">Cloudflare<span>1.1.1.1 · không DoH</span></button>
+              <button class="dns-q-btn" data-dns="cf-doh">Cloudflare + DoH<span>1.1.1.1 · mã hoá</span></button>
+              <button class="dns-q-btn" data-dns="gg">Google<span>8.8.8.8 · không DoH</span></button>
+              <button class="dns-q-btn" data-dns="gg-doh">Google + DoH<span>8.8.8.8 · mã hoá</span></button>
+              <button class="dns-q-btn reset" data-dns="dhcp" style="grid-column:span 2">Về DHCP — DNS mặc định ISP<span>xoá cài đặt DNS thủ công</span></button>
+            </div>
+            <div class="dns-set-result" id="dns-set-result" style="display:none"></div>
+          </div>
+
+          <!-- TEST KẾT NỐI -->
+          <div class="page-section">
+            <div class="page-section-title" style="display:flex;align-items:center;justify-content:space-between">
+              <span>kiểm tra kết nối</span>
+              <button class="btn-test" id="btn-test-conn">▶ chạy test</button>
+            </div>
+            <div class="test-results" id="test-results" style="display:none"></div>
+          </div>
+
+          <!-- NETWORK ADAPTER -->
+          <div class="page-section">
+            <div class="page-section-title">network adapter</div>
+            <div class="setting-row" style="border:none;padding-bottom:0">
+              <div>
+                <div class="setting-name">Mở Network Connections</div>
+                <div class="setting-desc">Xem và kiểm tra DNS trực tiếp trên từng adapter</div>
+              </div>
+              <button class="btn-test" id="btn-open-adapter2">⧉ ncpa.cpl</button>
+            </div>
+          </div>
+
+        </div>
+      </div><!-- /page-tools -->
+
+      <!-- ===== SETTINGS PAGE ===== -->
+      <div class="page" id="page-settings">
+        <div class="page-body-scroll">
+        <div class="page-body">
+
+          <div class="page-section">
+            <div class="page-section-title">dịch vụ</div>
+            <div class="setting-row">
+              <div><div class="setting-name">Steam</div><div class="setting-desc">Mở khoá Steam Store, Community</div></div>
+              <label class="toggle"><input type="checkbox" class="svc-check" data-svc="steam" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-name">Discord</div><div class="setting-desc">Mở khoá Discord, giảm lag voice</div></div>
+              <label class="toggle"><input type="checkbox" class="svc-check" data-svc="discord" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-name">Reddit</div><div class="setting-desc">Mở khoá Reddit</div></div>
+              <label class="toggle"><input type="checkbox" class="svc-check" data-svc="reddit" checked /><span class="slider"></span></label>
+            </div>
+            <div class="setting-row">
+              <div><div class="setting-name">NetEase Games</div><div class="setting-desc">Bypass throttle game CN (Nghịch Thủy Hàn...)</div></div>
+              <label class="toggle"><input type="checkbox" class="svc-check" data-svc="netease" checked /><span class="slider"></span></label>
+            </div>
+          </div>
+
+          <div class="page-section">
+            <div class="page-section-title">mạng</div>
+            <div class="setting-row">
+              <div><div class="setting-name">Network adapter</div><div class="setting-desc">Adapter áp dụng DNS mã hoá</div></div>
+              <div class="setting-controls">
+                <select class="sel" id="net-adapter">
+                  <option value="__all__">Tất cả adapter</option>
+                </select>
+                <button class="btn-icon" id="btn-open-adapter" title="Mở Network Connections">⧉</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="page-section">
+            <div class="page-section-title">dns</div>
+            <div class="setting-row">
+              <div><div class="setting-name">Server DNS</div><div class="setting-desc">Server mã hoá thay thế DNS của ISP</div></div>
+              <select class="sel" id="dns-server">
+                <option value="cloudflare">Cloudflare  1.1.1.1</option>
+                <option value="google">Google  8.8.8.8</option>
+                <option value="quad9">Quad9  9.9.9.9</option>
+                <option value="adguard">AdGuard DNS</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="page-section">
+            <div class="page-section-title">dpi bypass</div>
+            <div class="setting-row">
+              <div>
+                <div class="setting-name">Cường độ</div>
+                <div class="setting-desc" id="dpi-mode-desc">Fake packet + tách gói — tốc độ tải xuống giữ nguyên, CPU tăng nhẹ (~1-2%). Phù hợp hầu hết ISP Việt Nam.</div>              </div>
+              <select class="sel" id="dpi-mode">
+                <option value="1">nhẹ</option>
+                <option value="2" selected>cân bằng</option>
+                <option value="3">mạnh</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="page-section">
+            <div class="page-section-title">về app</div>
+            <div class="setting-row">
+              <div class="setting-name">Hotline DPI</div>
+              <span class="setting-meta">v1.0.0</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-name">GoodbyeDPI</div>
+              <span class="setting-meta">v0.2.2</span>
+            </div>
+            <div class="setting-row">
+              <div class="setting-name">dnsproxy</div>
+              <span class="setting-meta">v0.86.0</span>
+            </div>
+          </div>
+
+        </div>
+        </div><!-- /page-body-scroll -->
+      </div><!-- /page-settings -->
+
+      <!-- ===== LOGS PAGE ===== -->
+      <div class="page" id="page-logs">
+        <div class="log-header">
+          <span>nhật ký</span>
+          <button class="btn-sm" id="btn-clear-logs">xoá</button>
+        </div>
+        <div class="log-terminal" id="log-terminal">
+          <div class="log-line info">[hotline-dpi] sẵn sàng.</div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+
+  <!-- STATUS BAR -->
+  <div class="statusbar" id="statusbar">
+    <div class="statusbar-left">
+      <div class="status-dot" id="bar-dot"></div>
+      <span class="statusbar-state" id="bar-state">CHƯA BẢO VỆ</span>
+    </div>
+    <button class="connect-bar-btn" id="bar-btn">⏻ KẾT NỐI</button>
+  </div>
+
+  <!-- ADMIN OVERLAY -->
+  <div class="overlay" id="admin-overlay" style="display:none">
+    <div class="overlay-box">
+      <h2>⚠ CẦN QUYỀN ADMINISTRATOR</h2>
+      <p>Hotline DPI cần quyền admin để thay đổi DNS hệ thống và chạy GoodbyeDPI.<br/>Vui lòng đóng app và mở lại bằng "Run as administrator".</p>
+      <button class="btn-primary" id="btn-overlay-ok">ĐÃ HIỂU</button>
+    </div>
+  </div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
